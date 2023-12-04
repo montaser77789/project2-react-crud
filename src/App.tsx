@@ -1,35 +1,44 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import "./App.css";
+import ProductCard from "./Component/ProductCard";
+import Button from "./Component/Ui/Button";
+import Modal from "./Component/Ui/Model";
+import { productList } from "./data";
+
+
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  const renderProductCard = productList.map((product)=>( <ProductCard product={product} key={product.id}/>))
+  const [isOpen, setIsOpen] = useState(false)
 
+  function closeModal() {
+    setIsOpen(false)
+  }
+
+  function openModal() {
+    setIsOpen(true)
+  }
+  
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p >
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <main className="container ">
+      <Button  width="w-fit" className=" bg-indigo-700 " onClick={openModal}>ADD Product</Button>
+
+        <div className="grid gap-2 md:gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ">
+         {renderProductCard}
+        </div>
+      </main>
+      <Modal isOpen={isOpen} title="ADD Product" closeModal={closeModal}>
+        <div className="flex content-between space-x-2">
+        <Button width="w-full" className=" bg-indigo-700  hover:bg-indigo-500">SUBMIT</Button>
+        <Button width="w-full" className=" bg-gray-400 hover:bg-gray-500" onClick={closeModal}>CANCLE</Button>
+        </div>
+      
+
+      </Modal>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
