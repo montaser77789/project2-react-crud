@@ -1,5 +1,6 @@
 import { Textslicer } from "../Utils/Function";
 import { IProduct } from "../interfaces";
+import Circlecolor from "./CircleColor/Circlecolor";
 import Button from "./Ui/Button";
 import Imagec from "./images/Imagec";
 
@@ -8,7 +9,9 @@ interface Ipropse {
 }
 
 function ProductCard({ product }: Ipropse) {
-  const { description, imageURL, title, price } = product;
+  const { description, imageURL, title, price,colors } = product;
+
+  const Handlecolor = colors.map(color=> <Circlecolor  key={color} color={color} />)
   return (
     <>
       <div className="max-w-sm md:max-w-lg mx-auto md:mx-0 border rounded-md p-2 flex flex-col space-y-3">
@@ -24,9 +27,7 @@ function ProductCard({ product }: Ipropse) {
           </p>
         </div>
         <div className="flex items-center space-x-2 ">
-          <span className="w-5 h-5 rounded-full bg-indigo-500" />
-          <span className="w-5 h-5 rounded-full bg-yellow-500" />
-          <span className="w-5 h-5 rounded-full bg-red-500" />
+         {Handlecolor}
         </div>
         <div className="flex items-center justify-between my-2">
           <span>{price}</span>

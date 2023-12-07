@@ -3,11 +3,14 @@ import "./App.css";
 import ProductCard from "./Component/ProductCard";
 import Button from "./Component/Ui/Button";
 import Modal from "./Component/Ui/Model";
-import { formInputsList, productList } from "./data";
+import { colors, formInputsList, productList } from "./data";
 import Inputs from "./Component/Ui/Inputs";
 import { IProduct } from "./interfaces";
 import { productvalidation } from "./Component/Validation/Validation";
 import Errormsg from "./Component/Ui/Errormsg";
+import Circlecolor from "./Component/CircleColor/Circlecolor";
+import { v4 as uuid } from "uuid";
+
 
 function App() {
   //   state
@@ -24,6 +27,7 @@ function App() {
     },
   };
   const [isOpen, setIsOpen] = useState(false);
+  const [products,setproducts] =useState<IProduct[]>(productList)
   const [product, setproduct] = useState<IProduct>(productDefult);
   const [errorsmsg, seterrorsmsg] = useState({
     title: "",
@@ -31,10 +35,8 @@ function App() {
     imageURL: "",
     price: "",
   });
-
-  const renderProductCard = productList.map((product) => (
-    <ProductCard product={product} key={product.id} />
-  ));
+  const [tempColor ,settempColor] =useState<string[]>([])
+  console.log(tempColor);
 
   const closeModal = () => {
     setIsOpen(false);
@@ -42,6 +44,18 @@ function App() {
   const openModal = () => {
     setIsOpen(true);
   };
+  const CancleModel = () => {
+    setproduct(productDefult);
+    closeModal();
+  };
+  
+  const renderProductCard = products.map((product) => (
+    <ProductCard product={product} key={product.id} />
+  ));
+
+
+  
+  // handler
 
   const onChangeHandeler = (event: ChangeEvent<HTMLInputElement>) => {
     const { value, name } = event.target;
@@ -54,14 +68,8 @@ function App() {
       [name]: "",
     });
   };
-
-  const CancleModel = () => {
-    setproduct(productDefult);
-    closeModal();
-  };
-  //handler
   const handleforminptu = formInputsList.map((input) => (
-    <div className="flex flex-col">
+    <div className="flex flex-col" key={input.id}>
       <label className="text-sm font-medium text-gray-700" htmlFor={input.id}>
         {input.label}
       </label>
@@ -84,18 +92,35 @@ function App() {
       imageURL: product.imageURL,
       price: product.price,
     });
-    console.log(errors);
 
     const haserrormesage =
       Object.values(errors).some((value) => value == "") &&
       Object.values(errors).every((value) => value == "");
-    console.log(haserrormesage);
     if (!haserrormesage) {
       seterrorsmsg(errors);
       return;
     }
-    console.log("send Data to Back");
+    setproducts(prev=>[{...product , id:uuid(),colors:tempColor}, ...prev ])
+    setproduct(productDefult)
+    settempColor([])
+    closeModal();
   };
+
+  const Handlecolor = colors.map(color=> <Circlecolor  key={color} color={color} 
+  onClick={()=> {
+    if(tempColor.includes(color)){
+      settempColor(prev => prev.filter(item => item !== color));
+      return;
+    }
+    settempColor(prev=> [...prev ,color])
+
+
+
+  }}/>)
+
+// review  trim and filter and sum and every
+
+
   return (
     <>
       <main className="container ">
@@ -107,8 +132,14 @@ function App() {
         </div>
       </main>
       <Modal isOpen={isOpen} title="ADD Product" closeModal={closeModal}>
-        <form className="space-y-3" onSubmit={hnamleforminput}>
+        <form className="space-y-3 " onSubmit={hnamleforminput}>
           {handleforminptu}
+          <div className="flex items-center space-x-1 flex-wrap">
+        {Handlecolor}
+          </div>
+        {tempColor.map(color=>(
+          <span className="p-1 mr-1 mb-1 text-xs rounded-md text-white" style={{backgroundColor:color}}>{color}</span>
+        ))}
           <div className="flex content-between space-x-3">
             <Button
               width="w-full"
