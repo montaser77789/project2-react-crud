@@ -1,4 +1,4 @@
-import { Textslicer } from "../Utils/Function";
+import { Textslicer, numberWithCommas } from "../Utils/Function";
 import { IProduct } from "../interfaces";
 import Circlecolor from "./CircleColor/Circlecolor";
 import Button from "./Ui/Button";
@@ -6,12 +6,36 @@ import Imagec from "./images/Imagec";
 
 interface Ipropse {
   product: IProduct;
+  seteditproduct: (product: IProduct) => void;
+  openEditModal: () => void;
+  index: number;
+  setProducttoeditindex: (value: number) => void;
+  isOpenconfigModel: () => void;
 }
 
-function ProductCard({ product }: Ipropse) {
-  const { description, imageURL, title, price,colors } = product;
+function ProductCard({
+  product,
+  seteditproduct,
+  openEditModal,
+  index,
+  setProducttoeditindex,
+  isOpenconfigModel,
+}: Ipropse) {
+  const { description, imageURL, title, price, colors } = product;
 
-  const Handlecolor = colors.map(color=> <Circlecolor  key={color} color={color} />)
+  const Handlecolor = colors.map((color) => (
+    <Circlecolor key={color} color={color} />
+  ));
+
+  const onEdit = () => {
+    seteditproduct(product);
+    openEditModal();
+    setProducttoeditindex(index);
+  };
+  const onRemove = () => {
+    isOpenconfigModel();
+    seteditproduct(product);
+  };
   return (
     <>
       <div className="max-w-sm md:max-w-lg mx-auto md:mx-0 border rounded-md p-2 flex flex-col space-y-3">
@@ -26,11 +50,18 @@ function ProductCard({ product }: Ipropse) {
             {Textslicer(description)}
           </p>
         </div>
-        <div className="flex items-center space-x-2 ">
-         {Handlecolor}
+        <div className="flex items-center flex-wrap space-x-1">
+          {!colors.length ? (
+            <p className="min-h-[20px]">Not available colors!</p>
+          ) : (
+            Handlecolor
+          )}
         </div>
+
         <div className="flex items-center justify-between my-2">
-          <span>{price}</span>
+          <span className="text-lg text-indigo-600 font-semibold">
+            ${numberWithCommas(price)}
+          </span>{" "}
           <Imagec
             srcurl={product.imageURL}
             alt={"Product Name"}
@@ -38,11 +69,19 @@ function ProductCard({ product }: Ipropse) {
           />
         </div>
         <div className="flex items-center justify-between space-x-2 my-2">
-          <Button width="w-full" className=" bg-indigo-700 ">
+          <Button
+            width="w-full"
+            className="bg-indigo-700 hover:bg-indigo-800"
+            onClick={onEdit}
+          >
             EDIT
           </Button>
-          <Button width="w-full" className=" bg-red-700 ">
-            DELETE
+          <Button
+            width="w-full"
+            className="bg-[#c2344d] hover:bg-red-800"
+            onClick={onRemove}
+          >
+            Remove
           </Button>
         </div>
       </div>

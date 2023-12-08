@@ -1,16 +1,12 @@
-interface Ipropse{
-    srcurl:string,
-    alt:string,
-    ClassName:string,
-    
-
+interface Ipropse {
+  srcurl: string;
+  alt: string;
+  ClassName: string;
 }
-function Imagec({srcurl,alt,ClassName}:Ipropse) {
+function Imagec({ srcurl, alt, ClassName }: Ipropse) {
   return (
     <>
-          <img src={srcurl} alt={alt} className={ClassName} />
-
-
+      <img src={srcurl} alt={alt} className={ClassName} />
     </>
   );
 }

@@ -1,11 +1,13 @@
 
-export const productvalidation =(Product:{ title: string,description:string,imageURL:string,price:string})=>{
+export const productvalidation =(Product:{ title: string,description:string,imageURL:string,price:string  ,color:string[]}) =>{
 
-    const errors :{title: string,description:string,imageURL:string,price:string} ={
+    const errors :{title: string,description:string,imageURL:string,price:string ,colors:string} ={
         title:"",
         description:"",
         imageURL:"",
         price:"",
+        colors:"",
+
     }
     const vaildurl = /^(ftp|http|https):\/\/[^."]+$/.test(Product.imageURL)
 
@@ -21,6 +23,10 @@ export const productvalidation =(Product:{ title: string,description:string,imag
 
     if(!Product.price.trim() || isNaN(Number(Product.price))){
         errors.price  ="valid price is required"
+    }
+    if(Product.color.length == 0){
+        errors.colors="valid color is required"
+
     }
     
     return errors;
